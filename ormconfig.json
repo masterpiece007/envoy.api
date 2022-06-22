@@ -1,12 +1,13 @@
 {
   "type": "postgres",
-  "host": "127.0.0.1",
+  "host": "ec2-52-3-79-87.compute-1.amazonaws.com",
   "port": 5432,
-  "username": "postgres",
-  "password": "@ROLLover007",
-  "database": "EnvoyDB",
+  "username": "kowqwttbqqfpjy",
+  "password": "52fe67539e204f1d9e9f98d6792a0a00eca2e8f468478edc1329dda904ff8fd5",
+  "database": "dcqvq1ob0hs8es",
   "entities": [
     "dist/**/*.entity{.ts,.js}"
   ],
-  "synchronize": true
+  "synchronize": true,
+  "ssl": { "rejectUnauthorized": false }
 }

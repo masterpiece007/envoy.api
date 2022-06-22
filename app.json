@@ -1,0 +1,30 @@
+{
+    
+  "name": "EnvoyApp",
+  "description": "EnvoyApp is an app that makes you earn money when you travel",
+  "website": "https://envoyapp.netlify.app/",
+  "repository": "https://github.com/masterpiece007/envoy.api/",
+  "logo": "https://app.tooljet.io/assets/images/logo.svg",
+  "success_url": "/",
+  "scripts":{
+    "predeploy": "npm install && npm run build"
+  },
+  "env": {
+    "NODE_ENV": {
+      "description": "Environment [production/development]",
+      "value": "production"
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1
+    }
+  },
+  "image": "heroku/nodejs",
+  "addons": ["heroku-postgresql"],
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ]
+}
