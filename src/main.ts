@@ -20,6 +20,9 @@ async function bootstrap() {
   dotenv.config();
   app.useGlobalPipes(new ValidationPipe());
   //await app.listen(8090 || 3000);
-  await app.listen(3000, '0.0.0.0');
+  const port = parseInt(process.env.PORT) || 3000;
+
+  await app.listen(port);
+  //await app.listen(3000, '0.0.0.0');
 }
 bootstrap();

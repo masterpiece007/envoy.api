@@ -8,6 +8,9 @@ import {
   Param,
   UseGuards,
   Req,
+  BadRequestException,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { CreatePackageDto } from './dtos/create-package.dto';
 import { ApiTags } from '@nestjs/swagger';
@@ -65,14 +68,26 @@ export class PackagesController {
     return result;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('getPackageById/:id')
-  async GetPackageById(@Param('id') id: number) {
-    const result = await this.packagesService.GetPackageById(id);
+  async GetPackageById(@Param('id') id: number, @Req() req) {
+    //const result = await this.packagesService.GetPackageById(id);
+    const result = await this.packagesService.GetPackageById_(
+      id,
+      req.user.userId,
+    );
     return result;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('getAllPackages/:userId')
-  async GetAllPackages(@Param('userId') userId: string) {
+  async GetAllPackages(@Param('userId') userId: string, @Req() req) {
+    if (req.user.userId !== userId) {
+      return new HttpException(
+        `you call only fetch packages that belong to you`,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
     const result = await this.packagesService.GetAllPackages(userId);
     return result;
   }

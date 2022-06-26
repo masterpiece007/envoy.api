@@ -18,11 +18,12 @@ export class UserService {
   ) {}
 
   async createUser(dto: CreateUserDto): Promise<any> {
+    let savedUser: User;
     try {
       var token = this.generateRandomAlphaNumeric(8);
       dto.verificationCode = token;
       var newUser = this._userRepo.create(dto);
-      var savedUser = await this._userRepo.save(newUser);
+      savedUser = await this._userRepo.save(newUser);
 
       if (dto.email) {
         var user_: any = {
@@ -30,14 +31,19 @@ export class UserService {
           firstname: dto.firstname,
           id: savedUser.id,
         };
+        //TODO: fix email sender
         await this.mailService.sendUserConfirmation(user_, token);
-      }
-      {
       }
       return user_;
     } catch (error) {
+      if (!savedUser) {
+        throw new HttpException(
+          `unable to create user: ${error}`,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
       throw new HttpException(
-        `unable to create user: ${error}`,
+        `an error occured after saving the user: ${error}`,
         HttpStatus.BAD_REQUEST,
       );
     }

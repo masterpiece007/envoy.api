@@ -81,6 +81,38 @@ export class PackagesService {
     }
   }
 
+  async GetPackageById_(id: number, ownerId: string): Promise<GenericResponse> {
+    try {
+      //const package_ = await this._packageRepo.findOne(id);
+      const package_ = await this._packageRepo.findOne({
+        userId: ownerId,
+        id: id,
+      });
+      if (package_) {
+        // eslint-disable-next-line no-var
+        var response: GenericResponse = {
+          Status: _Status.Success,
+          Description: 'matching package fetched',
+          Data: package_,
+        };
+        return response;
+      }
+      // return package_;
+      // eslint-disable-next-line no-var
+      var response: GenericResponse = {
+        Status: _Status.Failed,
+        Description: 'no matching package was found',
+        Data: null,
+      };
+      return response;
+    } catch (error) {
+      throw new HttpException(
+        `an error occured: ${error}`,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
   async GetAllPackages(userId_: string): Promise<GenericResponse> {
     try {
       const userPackages = await this._packageRepo.find({ userId: userId_ });
@@ -261,6 +293,9 @@ export class PackagesService {
         userId: userId_,
       });
       const plans: SuggestedPlanDto[] = [];
+      if (!package_) {
+        throw new HttpException(`no package was found`, HttpStatus.BAD_REQUEST);
+      }
       if (package_.packageInterests) {
         package_.packageInterests.forEach((a) => {
           if (a.hasAlternatePlan && a.isInterested) {
@@ -292,10 +327,7 @@ export class PackagesService {
       };
       return response;
     } catch (error) {
-      throw new HttpException(
-        `an error occured: ${error}`,
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new HttpException(`error: ${error}`, HttpStatus.BAD_REQUEST);
     }
   }
 
